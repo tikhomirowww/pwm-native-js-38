@@ -23,9 +23,28 @@
         <label>Username:<input id="username" type="text" /> </label>
         <label>Email:<input id="email" type="email" /> </label>
         <label>Age: <input id="age" type="number" /> </label>
-        <label>Password:<input id="password" type="password" /> </label>
         <label
-          >Password confirmation:<input id="passwordConfirm" type="password" />
+          >Password:
+          <div class="password-container">
+            <input id="password" type="password" />
+            <a
+              href="#"
+              onclick="togglePassword('password')"
+              class="password-control"
+            ></a>
+          </div>
+        </label>
+
+        <label
+          >Password confirmation:
+          <div class="password-container">
+            <input id="passwordConfirm" type="password" />
+            <a
+              href="#"
+              onclick="togglePassword('passwordConfirm')"
+              class="password-control"
+            ></a>
+          </div>
         </label>
         <div class="registerButtonWrapper">
           <button>Register</button>

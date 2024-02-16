@@ -227,3 +227,21 @@ async function loginUser(e) {
 }
 
 loginForm.addEventListener("submit", loginUser);
+
+//! PASSWORD SHOW/HIDE
+function togglePassword(inputId) {
+  const inputElement = document.getElementById(inputId);
+  const passwordControl = document.querySelector(
+    `#${inputId} + .password-control`
+  );
+
+  if (inputElement.type === "password") {
+    inputElement.type = "text";
+    passwordControl.style.backgroundImage =
+      "url(https://snipp.ru/demo/495/no-view.svg)";
+  } else {
+    inputElement.type = "password";
+    passwordControl.style.backgroundImage =
+      "url(https://snipp.ru/demo/495/view.svg)";
+  }
+}

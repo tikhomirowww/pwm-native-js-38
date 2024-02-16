@@ -6,6 +6,20 @@
       "age": "12",
       "password": "123456",
       "id": 1
+    },
+    {
+      "username": "Erlan",
+      "email": "akbaroverlan@gmail.com",
+      "age": "21",
+      "password": "123456",
+      "id": 2
+    },
+    {
+      "username": "adilet ",
+      "email": "adilet@gmail.com",
+      "age": "20",
+      "password": "123456",
+      "id": 3
     }
   ]
 }

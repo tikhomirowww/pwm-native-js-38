@@ -156,3 +156,19 @@ h2 {
 .login-modal {
   display: none;
 }
+
+/*! PASSWORD SHOW/HISE */
+.password-container {
+  position: relative;
+}
+
+.password-control {
+  position: absolute;
+  top: 60%;
+  right: 15px;
+  transform: translateY(-50%);
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(https://snipp.ru/demo/495/view.svg) 0 0 no-repeat;
+}
