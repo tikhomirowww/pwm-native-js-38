@@ -246,3 +246,8 @@ function togglePassword(inputId) {
       "url(https://snipp.ru/demo/495/view.svg)";
   }
 }
+
+// let passShow = document.querySelector("#password-view");
+// let passShowConf = document.querySelector("#passwordConfirm-view");
+// passShow.addEventListener("click", togglePassword("password"));
+// passShowConf.addEventListener("click", togglePassword("passwordConfirm"));
