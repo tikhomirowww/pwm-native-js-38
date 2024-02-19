@@ -11,6 +11,7 @@
       <h2>JSON-Market</h2>
       <span id="user-nav"></span>
       <div class="buttons">
+        <button id="add">Add</button>
         <button class="registerUser-modal">Register</button>
         <button class="loginUser-modal">Login</button>
         <button class="logoutUser-btn">Logout</button>
@@ -52,7 +53,24 @@
         </form>
       </div>
     </div>
+    <div class="modal-addProduct">
+      <div class="modal">
+        <h3>Add product</h3>
+        <form id="addProduct-form">
+          <label>Title: <input id="title" type="text" /></label>
+          <label>Description: <input id="desc" type="text" /></label>
+          <label>Category: <input id="category" type="text" /></label>
+          <label>Price: <input id="price" type="number" /></label>
+          <label>Image: <input id="image" type="url" /></label>
+          <div class="registerButtonWrapper">
+            <button>Add product</button>
+            <button id="cancel" type="reset">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="messageBox"></div>
+    <div id="products"></div>
   </body>
   <script src="./JS/main.js"></script>
 </html>
