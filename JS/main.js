@@ -25,9 +25,19 @@ const logPasswordInp = document.querySelector("#password-login");
 //? logout connect
 const logoutBtn = document.querySelector(".logoutUser-btn");
 
+// ? crud connect
+const addModalProductBtn = document.querySelector("#add");
+const titleInp = document.querySelector("#title");
+const descInp = document.querySelector("#desc");
+const categoryInp = document.querySelector("#category");
+const priceInp = document.querySelector("#price");
+const imageInp = document.querySelector("#image");
+const addProductForm = document.querySelector("#addProduct-form");
+const productsList = document.querySelector("#products");
+
 // ?modal logic
 let modal = null;
-cancelBtn.forEach((item) => {
+cancelBtn.forEach(item => {
   console.log(item);
   item.addEventListener("click", hideModal);
 });
@@ -102,7 +112,7 @@ function isDescendant(parent, child) {
 async function checkUniqueUserName(username) {
   let res = await fetch(USERS_API);
   let users = await res.json();
-  return users.some((item) => item.username === username);
+  return users.some(item => item.username === username);
 }
 
 async function registerUser(e) {
@@ -186,7 +196,7 @@ loginBtn.addEventListener("click", () => showModal("login"));
 async function checkUserPassword(username, password) {
   let res = await fetch(USERS_API);
   let users = await res.json();
-  const userObj = users.find((item) => item.username === username);
+  const userObj = users.find(item => item.username === username);
   return userObj.password === password ? true : false;
 }
 
@@ -224,7 +234,7 @@ async function loginUser(e) {
 
   let res = await fetch(USERS_API);
   let users = await res.json();
-  const userObj = users.find((item) => item.username === logUserInp.value);
+  const userObj = users.find(item => item.username === logUserInp.value);
   initStorage();
   setUserToStorage(userObj.username, userObj.isAdmin);
 
@@ -253,11 +263,23 @@ function checkStatus() {
     loginBtn.style.display = "block";
     registerUserModalBtn.style.display = "block";
     userNav.innerText = "";
+    addModalProductBtn.style.display = "none";
   } else {
     logoutBtn.style.display = "block";
     loginBtn.style.display = "none";
     registerUserModalBtn.style.display = "none";
     userNav.innerText = user.user;
   }
+
+  if (user && user.isAdmin) {
+    addModalProductBtn.style.display = "block";
+  } else {
+    addModalProductBtn.style.display = "none";
+  }
 }
+
 checkStatus();
+
+// ? create product
+
+addModalProductBtn.addEventListener("click", () => showModal("addProduct"));
