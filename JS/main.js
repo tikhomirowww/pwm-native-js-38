@@ -12,6 +12,7 @@ const passwordInp = document.querySelector("#password");
 const passwordConfirmInp = document.querySelector("#passwordConfirm");
 const registerForm = document.querySelector("#registerUser-form");
 const USERS_API = "http://localhost:8000/users";
+const PRODUCTS_API = "http://localhost:8000/products";
 
 const registerCancel = document.querySelector(".modal button[type='reset']");
 
@@ -251,6 +252,7 @@ loginForm.addEventListener("submit", loginUser);
 // ? logout logic
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("user");
+  render();
   checkStatus();
 });
 
@@ -280,6 +282,92 @@ function checkStatus() {
 
 checkStatus();
 
+function inputsClear(...rest) {
+  for (let i = 0; i < rest.length; i++) {
+    rest[i].value = "";
+  }
+}
+
+// ! crud logic
+
 // ? create product
 
 addModalProductBtn.addEventListener("click", () => showModal("addProduct"));
+
+async function createProduct(e) {
+  e.preventDefault();
+  if (
+    !titleInp.value.trim() ||
+    !priceInp.value.trim() ||
+    !categoryInp.value.trim() ||
+    !descInp.value.trim() ||
+    !imageInp.value.trim()
+  ) {
+    showMessage("Some inputs are empty");
+    return;
+  }
+
+  const newProduct = {
+    title: titleInp.value,
+    price: priceInp.value,
+    category: categoryInp.value,
+    description: descInp.value,
+    image: imageInp.value,
+  };
+
+  await fetch(PRODUCTS_API, {
+    method: "POST",
+    body: JSON.stringify(newProduct),
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  });
+  render();
+  hideModal();
+  inputsClear(titleInp, priceInp, categoryInp, descInp, imageInp);
+}
+
+addProductForm.addEventListener("submit", createProduct);
+
+// ? read logic
+
+async function render() {
+  let requestAPI = `${PRODUCTS_API}`;
+  const res = await fetch(requestAPI);
+  const data = await res.json();
+  initStorage();
+  const user = JSON.parse(localStorage.getItem("user"));
+  productsList.innerHTML = "";
+  data.forEach(card => {
+    productsList.innerHTML += `
+    <div>
+    <img width=100 src=${card.image} />
+    <div><b>${card.title}</b></div>
+    <div><b>Description:</b>${card.description}</div>
+    <div><b>Category:</b>${card.category}</div>
+    <div><b>Price:</b>${card.price}$</div>
+    ${
+      user.isAdmin
+        ? `
+      <button id=${card.id}  class='deleteBtn' >Delete</button>
+      <button id=${card.id}  class='editBtn' >Edit</button>
+      `
+        : ""
+    }
+    </div>
+    `;
+  });
+}
+
+render();
+
+// ? delete logic
+
+document.addEventListener("click", async e => {
+  if (e.target.classList.contains("deleteBtn")) {
+    await fetch(`${PRODUCTS_API}/${e.target.id}`, {
+      method: "DELETE",
+    });
+    render();
+  }
+});
