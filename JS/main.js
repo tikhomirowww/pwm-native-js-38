@@ -22,6 +22,18 @@ const loginModal = document.querySelector(".login-modal");
 const loginForm = document.querySelector("#loginUser-form");
 const logUserInp = document.querySelector("#username-login");
 const logPasswordInp = document.querySelector("#password-login");
+// ? logout connect
+const logoutBtn = document.querySelector(".logoutUser-btn");
+
+// ? CRUD connect
+const addModalProductBtn = document.querySelector("#add");
+const titleInp = document.querySelector("#title");
+const descInp = document.querySelector("#desc");
+const categoryInp = document.querySelector("#category");
+const priceInp = document.querySelector("#price");
+const imageInp = document.querySelector("#image");
+const addProductForm = document.querySelector("#addProduct-form");
+const productsList = document.querySelector("#products");
 
 //? logout connect
 const logoutBtn = document.querySelector(".logoutUser-btn");
@@ -75,6 +87,7 @@ function hideModal() {
 }
 
 registerUserModalBtn.addEventListener("click", () => showModal("register"));
+
 
 // ? register logic
 passwordInp.addEventListener("input", () => {
@@ -189,6 +202,7 @@ async function registerUser(e) {
 registerForm.addEventListener("submit", registerUser);
 registerCancel.addEventListener("click", hideModal);
 
+
 // ? message box logic
 
 const messageBox = document.querySelector(".messageBox");
@@ -248,7 +262,9 @@ async function loginUser(e) {
 
   let res = await fetch(USERS_API);
   let users = await res.json();
-  const userObj = users.find(item => item.username === logUserInp.value);
+  const userObj = users.find((item) => item.username === logUserInp.value);
+  render();
+
   initStorage();
   setUserToStorage(userObj.username, userObj.isAdmin);
 
@@ -259,8 +275,8 @@ async function loginUser(e) {
   checkStatus();
   hideModal();
 }
-
 loginForm.addEventListener("submit", loginUser);
+
 
 //! PASSWORD SHOW/HIDE
 function togglePassword(inputId) {
@@ -322,6 +338,7 @@ function inputsClear(...rest) {
 
 // ! crud logic
 
+
 // ? create product
 
 addModalProductBtn.addEventListener("click", () => showModal("addProduct"));
@@ -370,10 +387,11 @@ async function render() {
   initStorage();
   const user = JSON.parse(localStorage.getItem("user"));
   productsList.innerHTML = "";
-  data.forEach(card => {
+  data.forEach((card) => {
     productsList.innerHTML += `
-    <div>
-    <img width=100 src=${card.image} />
+<div class='productsList'>
+    <img width="300px" height="300px"object-fit="contain" src=${card.image} />
+
     <div><b>${card.title}</b></div>
     <div><b>Description:</b>${card.description}</div>
     <div><b>Category:</b>${card.category}</div>
@@ -391,6 +409,7 @@ async function render() {
   });
 }
 
+
 render();
 
 // ? delete logic
@@ -403,3 +422,4 @@ document.addEventListener("click", async e => {
     render();
   }
 });
+
