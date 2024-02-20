@@ -2,6 +2,7 @@
 const registerUserModalBtn = document.querySelector(".registerUser-modal");
 const cancelBtn = document.querySelectorAll("#cancel");
 const userNav = document.querySelector("#user-nav");
+
 // ?register  connect
 
 const userNameInp = document.querySelector("#username");
@@ -34,9 +35,22 @@ const imageInp = document.querySelector("#image");
 const addProductForm = document.querySelector("#addProduct-form");
 const productsList = document.querySelector("#products");
 
+//? logout connect
+const logoutBtn = document.querySelector(".logoutUser-btn");
+
+// ? crud connect
+const addModalProductBtn = document.querySelector("#add");
+const titleInp = document.querySelector("#title");
+const descInp = document.querySelector("#desc");
+const categoryInp = document.querySelector("#category");
+const priceInp = document.querySelector("#price");
+const imageInp = document.querySelector("#image");
+const addProductForm = document.querySelector("#addProduct-form");
+const productsList = document.querySelector("#products");
+
 // ?modal logic
 let modal = null;
-cancelBtn.forEach((item) => {
+cancelBtn.forEach(item => {
   console.log(item);
   item.addEventListener("click", hideModal);
 });
@@ -55,7 +69,8 @@ function showModal(modalName) {
   });
 
   if (!innerModal.classList.contains("show")) {
-    innerModal.style.display = "block";
+    // innerModal.style.display = "block";
+    innerModal.classList.add("block");
     setTimeout(function () {
       innerModal.classList.add("show");
     }, 10);
@@ -67,12 +82,14 @@ function showModal(modalName) {
 function hideModal() {
   console.log("modal");
   modal?.classList.remove("show");
+  modal?.classList.remove("block");
   modal?.parentNode.parentNode.childNodes[0].classList.remove("modal-bg");
 }
 
 registerUserModalBtn.addEventListener("click", () => showModal("register"));
 
-//?register logic
+
+// ? register logic
 passwordInp.addEventListener("input", () => {
   if (passwordInp.value.length < 6) {
     passwordInp.style.border = "3px solid red";
@@ -106,10 +123,23 @@ function isDescendant(parent, child) {
   return false;
 }
 
+function clickOutsideModal(event) {
+  if (
+    !isDescendant(modal, event.target) &&
+    event.target !== registerUserModalBtn
+  ) {
+    modal.classList.remove("show");
+  }
+}
+// dshjkcn;
+
+document.addEventListener("click", clickOutsideModal);
+
+
 async function checkUniqueUserName(username) {
   let res = await fetch(USERS_API);
   let users = await res.json();
-  return users.some((item) => item.username === username);
+  return users.some(item => item.username === username);
 }
 
 async function registerUser(e) {
@@ -172,7 +202,8 @@ async function registerUser(e) {
 registerForm.addEventListener("submit", registerUser);
 registerCancel.addEventListener("click", hideModal);
 
-// ?message box logic
+
+// ? message box logic
 
 const messageBox = document.querySelector(".messageBox");
 
@@ -193,7 +224,7 @@ loginBtn.addEventListener("click", () => showModal("login"));
 async function checkUserPassword(username, password) {
   let res = await fetch(USERS_API);
   let users = await res.json();
-  const userObj = users.find((item) => item.username === username);
+  const userObj = users.find(item => item.username === username);
   return userObj.password === password ? true : false;
 }
 
@@ -232,8 +263,8 @@ async function loginUser(e) {
   let res = await fetch(USERS_API);
   let users = await res.json();
   const userObj = users.find((item) => item.username === logUserInp.value);
-  console.log(userObj);
   render();
+
   initStorage();
   setUserToStorage(userObj.username, userObj.isAdmin);
 
@@ -246,14 +277,34 @@ async function loginUser(e) {
 }
 loginForm.addEventListener("submit", loginUser);
 
+
+//! PASSWORD SHOW/HIDE
+function togglePassword(inputId) {
+  const inputElement = document.getElementById(inputId);
+  const passwordControl = document.querySelector(
+    `#${inputId} + .password-control`
+  );
+
+  if (inputElement.type === "password") {
+    inputElement.type = "text";
+    passwordControl.style.backgroundImage =
+      "url(https://snipp.ru/demo/495/no-view.svg)";
+  } else {
+    inputElement.type = "password";
+    passwordControl.style.backgroundImage =
+      "url(https://snipp.ru/demo/495/view.svg)";
+  }
+}
+
+
 // ? logout logic
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("user");
-  checkStatus();
   render();
+  checkStatus();
 });
 
-// ? check status
+// ? checkStatus
 function checkStatus() {
   const user = JSON.parse(localStorage.getItem("user"));
   console.log(user);
@@ -269,12 +320,14 @@ function checkStatus() {
     registerUserModalBtn.style.display = "none";
     userNav.innerText = user.user;
   }
+
   if (user && user.isAdmin) {
     addModalProductBtn.style.display = "block";
   } else {
     addModalProductBtn.style.display = "none";
   }
 }
+
 checkStatus();
 
 function inputsClear(...rest) {
@@ -284,8 +337,12 @@ function inputsClear(...rest) {
 }
 
 // ! crud logic
+
+
 // ? create product
+
 addModalProductBtn.addEventListener("click", () => showModal("addProduct"));
+
 async function createProduct(e) {
   e.preventDefault();
   if (
@@ -298,6 +355,7 @@ async function createProduct(e) {
     showMessage("Some inputs are empty");
     return;
   }
+
   const newProduct = {
     title: titleInp.value,
     price: priceInp.value,
@@ -317,6 +375,7 @@ async function createProduct(e) {
   hideModal();
   inputsClear(titleInp, priceInp, categoryInp, descInp, imageInp);
 }
+
 addProductForm.addEventListener("submit", createProduct);
 
 // ? read logic
@@ -325,7 +384,6 @@ async function render() {
   let requestAPI = `${PRODUCTS_API}`;
   const res = await fetch(requestAPI);
   const data = await res.json();
-  // console.log(data);
   initStorage();
   const user = JSON.parse(localStorage.getItem("user"));
   productsList.innerHTML = "";
@@ -333,6 +391,7 @@ async function render() {
     productsList.innerHTML += `
 <div class='productsList'>
     <img width="300px" height="300px"object-fit="contain" src=${card.image} />
+
     <div><b>${card.title}</b></div>
     <div><b>Description:</b>${card.description}</div>
     <div><b>Category:</b>${card.category}</div>
@@ -349,10 +408,13 @@ async function render() {
     `;
   });
 }
+
+
 render();
 
 // ? delete logic
-document.addEventListener("click", async (e) => {
+
+document.addEventListener("click", async e => {
   if (e.target.classList.contains("deleteBtn")) {
     await fetch(`${PRODUCTS_API}/${e.target.id}`, {
       method: "DELETE",
@@ -361,13 +423,3 @@ document.addEventListener("click", async (e) => {
   }
 });
 
-// ? update
-let id = null;
-
-async function getOneProductById(id) {
-  let reqAPI = `${PRODUCTS_API}/${id}`;
-  const res = await fetch(reqAPI);
-  const datas = await res.json();
-  console.log(datas);
-  return datas;
-}

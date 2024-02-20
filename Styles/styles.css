@@ -106,6 +106,14 @@
   opacity: 1;
 }
 
+#user-nav {
+  color: white;
+}
+
+.block {
+  display: block;
+}
+
 nav {
   padding: 10px;
   background-color: rgb(56, 55, 55);
@@ -189,4 +197,20 @@ h2 {
   margin: 10px;
 }
 .productsList {
+}
+
+/*! PASSWORD SHOW/HISE */
+.password-container {
+  position: relative;
+}
+
+.password-control {
+  position: absolute;
+  top: 60%;
+  right: 15px;
+  transform: translateY(-50%);
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(https://snipp.ru/demo/495/view.svg) 0 0 no-repeat;
 }

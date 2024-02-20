@@ -18,6 +18,7 @@
         <input class="search" type="text" placeholder="search" />
       </div>
     </nav>
+
     <div class="modal-register">
       <div class="modal">
         <h3>Register</h3>
@@ -26,12 +27,18 @@
           <label>Email:<input id="email" type="email" /> </label>
           <label>Age: <input id="age" type="number" /> </label>
           <label>Password:<input id="password" type="password" /> </label>
-          <label
-            >Password confirmation:<input
-              id="passwordConfirm"
-              type="password"
-            />
-          </label>
+         <label
+          >Password confirmation:
+          <div class="password-container">
+            <input id="passwordConfirm" type="password" />
+            <a
+              id="passwordConfirm-view"
+              href="#"
+              onclick="togglePassword('passwordConfirm')"
+              class="password-control"
+            ></a>
+          </div>
+        </label>
           <div class="registerButtonWrapper">
             <button>Register</button>
             <button id="cancel" type="reset">Cancel</button>
@@ -55,7 +62,8 @@
     </div>
     <div class="modal-addProduct">
       <div class="modal">
-        <h3>add product</h3>
+
+        <h3>Add product</h3>
         <form id="addProduct-form">
           <label>Title: <input id="title" type="text" /></label>
           <label>Description: <input id="desc" type="text" /></label>
@@ -63,7 +71,8 @@
           <label>Price: <input id="price" type="number" /></label>
           <label>Image: <input id="image" type="url" /></label>
           <div class="registerButtonWrapper">
-            <button>add product</button>
+
+            <button>Add product</button>
             <button id="cancel" type="reset">Cancel</button>
           </div>
         </form>

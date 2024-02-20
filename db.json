@@ -9,28 +9,24 @@
       "id": 1
     },
     {
-      "username": "Meristen",
-      "email": "meristen@gmail.com",
-      "age": "35",
+
+
+      "username": "ilia",
+      "email": "tihomirovi92@gmail.com",
+      "age": "3245",
       "isAdmin": false,
       "password": "123456",
       "id": 2
     },
     {
-      "username": "meristen",
-      "email": "meristenu@gmail.com",
-      "age": "312",
+
+
+      "username": "adminfgjh@gmail.com",
+      "email": "tihomirovi92@gmail.com",
+      "age": "3245",
       "isAdmin": false,
       "password": "123456",
       "id": 3
-    },
-    {
-      "username": "baiysh",
-      "email": "baiyshbeksultanov1@gmail.com",
-      "age": "12",
-      "isAdmin": false,
-      "password": "123123",
-      "id": 4
     }
   ],
   "products": [
@@ -65,6 +61,7 @@
       "description": "sedan",
       "image": "https://kolesa-photos.kcdn.online/kolesa-read/c92481a037c0fbbdea9f5764fb32c649aaa307a5-1193x671.jpg",
       "id": 7
+
     }
   ]
 }
