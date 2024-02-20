@@ -9,8 +9,6 @@
       "id": 1
     },
     {
-
-
       "username": "ilia",
       "email": "tihomirovi92@gmail.com",
       "age": "3245",
@@ -19,8 +17,6 @@
       "id": 2
     },
     {
-
-
       "username": "adminfgjh@gmail.com",
       "email": "tihomirovi92@gmail.com",
       "age": "3245",
@@ -31,18 +27,10 @@
   ],
   "products": [
     {
-      "title": "mers",
-      "price": "2500",
+      "title": "maseratti123",
+      "price": "1000",
       "category": "cars",
-      "description": "best",
-      "image": "https://avatars.mds.yandex.net/get-verba/997355/2a00000176b7d3f6a4f92df665019bd8cd6f/cattouchret",
-      "id": 2
-    },
-    {
-      "title": "maseratti",
-      "price": "1000000",
-      "category": "cars",
-      "description": "sport-car",
+      "description": "sport-car: the best",
       "image": "https://car-images.bauersecure.com/wp-images/4158/080-maserati-mc20-notte.jpg",
       "id": 4
     },
@@ -61,7 +49,6 @@
       "description": "sedan",
       "image": "https://kolesa-photos.kcdn.online/kolesa-read/c92481a037c0fbbdea9f5764fb32c649aaa307a5-1193x671.jpg",
       "id": 7
-
     }
   ]
 }
