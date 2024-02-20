@@ -22,18 +22,6 @@ const loginModal = document.querySelector(".login-modal");
 const loginForm = document.querySelector("#loginUser-form");
 const logUserInp = document.querySelector("#username-login");
 const logPasswordInp = document.querySelector("#password-login");
-// ? logout connect
-const logoutBtn = document.querySelector(".logoutUser-btn");
-
-// ? CRUD connect
-const addModalProductBtn = document.querySelector("#add");
-const titleInp = document.querySelector("#title");
-const descInp = document.querySelector("#desc");
-const categoryInp = document.querySelector("#category");
-const priceInp = document.querySelector("#price");
-const imageInp = document.querySelector("#image");
-const addProductForm = document.querySelector("#addProduct-form");
-const productsList = document.querySelector("#products");
 
 //? logout connect
 const logoutBtn = document.querySelector(".logoutUser-btn");
@@ -47,6 +35,17 @@ const priceInp = document.querySelector("#price");
 const imageInp = document.querySelector("#image");
 const addProductForm = document.querySelector("#addProduct-form");
 const productsList = document.querySelector("#products");
+
+// ? edit connect
+const titleInpEdit = document.querySelector("#titleEdit");
+const descInpEdit = document.querySelector("#descEdit");
+const priceInpEdit = document.querySelector("#priceEdit");
+const categoryInpEdit = document.querySelector("#categoryEdit");
+const imageInpEdit = document.querySelector("#imageEdit");
+const editProductForm = document.querySelector("#editProduct-form");
+
+// ? search connect
+const searchInp = document.querySelector(".search");
 
 // ?modal logic
 let modal = null;
@@ -88,7 +87,6 @@ function hideModal() {
 
 registerUserModalBtn.addEventListener("click", () => showModal("register"));
 
-
 // ? register logic
 passwordInp.addEventListener("input", () => {
   if (passwordInp.value.length < 6) {
@@ -128,13 +126,12 @@ function clickOutsideModal(event) {
     !isDescendant(modal, event.target) &&
     event.target !== registerUserModalBtn
   ) {
-    modal.classList.remove("show");
+    modal?.classList.remove("show");
   }
 }
 // dshjkcn;
 
 document.addEventListener("click", clickOutsideModal);
-
 
 async function checkUniqueUserName(username) {
   let res = await fetch(USERS_API);
@@ -202,7 +199,6 @@ async function registerUser(e) {
 registerForm.addEventListener("submit", registerUser);
 registerCancel.addEventListener("click", hideModal);
 
-
 // ? message box logic
 
 const messageBox = document.querySelector(".messageBox");
@@ -262,7 +258,7 @@ async function loginUser(e) {
 
   let res = await fetch(USERS_API);
   let users = await res.json();
-  const userObj = users.find((item) => item.username === logUserInp.value);
+  const userObj = users.find(item => item.username === logUserInp.value);
   render();
 
   initStorage();
@@ -276,7 +272,6 @@ async function loginUser(e) {
   hideModal();
 }
 loginForm.addEventListener("submit", loginUser);
-
 
 //! PASSWORD SHOW/HIDE
 function togglePassword(inputId) {
@@ -295,7 +290,6 @@ function togglePassword(inputId) {
       "url(https://snipp.ru/demo/495/view.svg)";
   }
 }
-
 
 // ? logout logic
 logoutBtn.addEventListener("click", () => {
@@ -338,7 +332,6 @@ function inputsClear(...rest) {
 
 // ! crud logic
 
-
 // ? create product
 
 addModalProductBtn.addEventListener("click", () => showModal("addProduct"));
@@ -380,14 +373,16 @@ addProductForm.addEventListener("submit", createProduct);
 
 // ? read logic
 
+let search = "";
+
 async function render() {
-  let requestAPI = `${PRODUCTS_API}`;
+  let requestAPI = `${PRODUCTS_API}?title_like=${search}`;
   const res = await fetch(requestAPI);
   const data = await res.json();
   initStorage();
   const user = JSON.parse(localStorage.getItem("user"));
   productsList.innerHTML = "";
-  data.forEach((card) => {
+  data.forEach(card => {
     productsList.innerHTML += `
 <div class='productsList'>
     <img width="300px" height="300px"object-fit="contain" src=${card.image} />
@@ -409,7 +404,6 @@ async function render() {
   });
 }
 
-
 render();
 
 // ? delete logic
@@ -423,3 +417,61 @@ document.addEventListener("click", async e => {
   }
 });
 
+// ? edit logic
+
+let id = null;
+
+document.addEventListener("click", async e => {
+  if (e.target.classList.contains("editBtn")) {
+    const productId = e.target.id;
+    const res = await fetch(`${PRODUCTS_API}/${productId}`);
+    const data = await res.json();
+    titleInpEdit.value = data.title;
+    priceInpEdit.value = data.price;
+    categoryInpEdit.value = data.category;
+    descInpEdit.value = data.description;
+    imageInpEdit.value = data.image;
+    id = productId;
+
+    showModal("editProduct");
+  }
+});
+
+editProductForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  if (
+    !titleInpEdit.value.trim() ||
+    !priceInpEdit.value.trim() ||
+    !categoryInpEdit.value.trim() ||
+    !descInpEdit.value.trim() ||
+    !imageInpEdit.value.trim()
+  ) {
+    showMessage("Some inputs are empty");
+    return;
+  }
+
+  const editedObj = {
+    title: titleInpEdit.value,
+    price: priceInpEdit.value,
+    description: descInpEdit.value,
+    category: categoryInpEdit.value,
+    image: imageInpEdit.value,
+  };
+
+  await fetch(`${PRODUCTS_API}/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(editedObj),
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  });
+  render();
+  hideModal();
+});
+
+// ! search logic
+
+searchInp.addEventListener("input", () => {
+  search = searchInp.value;
+  render();
+});
