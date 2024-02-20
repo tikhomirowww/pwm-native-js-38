@@ -1,6 +1,7 @@
 //show modal connect
 const registerUserModalBtn = document.querySelector(".registerUser-modal");
-const modal = document.querySelector(".modal");
+const cancelBtn = document.querySelectorAll("#cancel");
+const userNav = document.querySelector("#user-nav");
 
 // ?register  connect
 
@@ -11,6 +12,7 @@ const passwordInp = document.querySelector("#password");
 const passwordConfirmInp = document.querySelector("#passwordConfirm");
 const registerForm = document.querySelector("#registerUser-form");
 const USERS_API = "http://localhost:8000/users";
+const PRODUCTS_API = "http://localhost:8000/products";
 
 const registerCancel = document.querySelector(".modal button[type='reset']");
 
@@ -21,25 +23,60 @@ const loginForm = document.querySelector("#loginUser-form");
 const logUserInp = document.querySelector("#username-login");
 const logPasswordInp = document.querySelector("#password-login");
 
-// ?modal logic
+//? logout connect
+const logoutBtn = document.querySelector(".logoutUser-btn");
 
-function showModal() {
-  if (!modal.classList.contains("show")) {
-    modal.style.display = "block";
+// ? crud connect
+const addModalProductBtn = document.querySelector("#add");
+const titleInp = document.querySelector("#title");
+const descInp = document.querySelector("#desc");
+const categoryInp = document.querySelector("#category");
+const priceInp = document.querySelector("#price");
+const imageInp = document.querySelector("#image");
+const addProductForm = document.querySelector("#addProduct-form");
+const productsList = document.querySelector("#products");
+
+// ?modal logic
+let modal = null;
+cancelBtn.forEach(item => {
+  console.log(item);
+  item.addEventListener("click", hideModal);
+});
+
+function showModal(modalName) {
+  let customModal = document.querySelector(`.modal-${modalName}`);
+  let innerModal = customModal.childNodes[1];
+  modal = innerModal;
+  let bg = document.createElement("div");
+  bg.classList.add("modal-bg");
+  document.body.prepend(bg);
+
+  bg.addEventListener("click", () => {
+    hideModal();
+    bg.classList.remove("modal-bg");
+  });
+
+  if (!innerModal.classList.contains("show")) {
+    // innerModal.style.display = "block";
+    innerModal.classList.add("block");
     setTimeout(function () {
-      modal.classList.add("show");
+      innerModal.classList.add("show");
     }, 10);
   } else {
-    modal.classList.remove("show");
+    innerModal.classList.remove("show");
   }
 }
+
 function hideModal() {
-  modal.classList.remove("show");
+  console.log("modal");
+  modal?.classList.remove("show");
+  modal?.classList.remove("block");
+  modal?.parentNode.parentNode.childNodes[0].classList.remove("modal-bg");
 }
 
-registerUserModalBtn.addEventListener("click", showModal);
+registerUserModalBtn.addEventListener("click", () => showModal("register"));
 
-//register logic
+// ? register logic
 passwordInp.addEventListener("input", () => {
   if (passwordInp.value.length < 6) {
     passwordInp.style.border = "3px solid red";
@@ -85,10 +122,11 @@ function clickOutsideModal(event) {
 
 document.addEventListener("click", clickOutsideModal);
 
+
 async function checkUniqueUserName(username) {
   let res = await fetch(USERS_API);
   let users = await res.json();
-  return users.some((item) => item.username === username);
+  return users.some(item => item.username === username);
 }
 
 async function registerUser(e) {
@@ -128,6 +166,7 @@ async function registerUser(e) {
     username: userNameInp.value,
     email: emailInp.value,
     age: ageInp.value,
+    isAdmin: false,
     password: passwordInp.value,
   };
   fetch(USERS_API, {
@@ -144,13 +183,13 @@ async function registerUser(e) {
   passwordConfirmInp.value = "";
 
   showMessage("Успех!!!");
-  showModal();
+  hideModal();
 }
 
 registerForm.addEventListener("submit", registerUser);
 registerCancel.addEventListener("click", hideModal);
 
-// message box logic
+// ? message box logic
 
 const messageBox = document.querySelector(".messageBox");
 
@@ -166,18 +205,12 @@ function hideMessage() {
 
 // ? login logic
 
-loginBtn.addEventListener("click", () => {
-  if (loginModal.style.display === "block") {
-    loginModal.style.display = "none";
-  } else {
-    loginModal.style.display = "block";
-  }
-});
+loginBtn.addEventListener("click", () => showModal("login"));
 
 async function checkUserPassword(username, password) {
   let res = await fetch(USERS_API);
   let users = await res.json();
-  const userObj = users.find((item) => item.username === username);
+  const userObj = users.find(item => item.username === username);
   return userObj.password === password ? true : false;
 }
 
@@ -186,7 +219,6 @@ function initStorage() {
     localStorage.setItem("user", "{}");
   }
 }
-initStorage();
 
 function setUserToStorage(username, isAdmin = false) {
   localStorage.setItem(
@@ -197,10 +229,6 @@ function setUserToStorage(username, isAdmin = false) {
 
 async function loginUser(e) {
   e.preventDefault();
-
-  let res = await fetch(USERS_API);
-  let users = await res.json();
-  const userObj = users.find((item) => item.username === username);
 
   if (!logUserInp.value.trim() || !logPasswordInp.value.trim()) {
     showMessage("Some inputs are empty");
@@ -218,13 +246,18 @@ async function loginUser(e) {
     return;
   }
 
-  setUserToStorage(logUserInp.value);
+  let res = await fetch(USERS_API);
+  let users = await res.json();
+  const userObj = users.find(item => item.username === logUserInp.value);
+  initStorage();
+  setUserToStorage(userObj.username, userObj.isAdmin);
 
   logUserInp.value = "";
   logPasswordInp.value = "";
 
   showMessage("Success");
-  loginModal.style.display = "none";
+  checkStatus();
+  hideModal();
 }
 
 loginForm.addEventListener("submit", loginUser);
@@ -247,7 +280,126 @@ function togglePassword(inputId) {
   }
 }
 
-// let passShow = document.querySelector("#password-view");
-// let passShowConf = document.querySelector("#passwordConfirm-view");
-// passShow.addEventListener("click", togglePassword("password"));
-// passShowConf.addEventListener("click", togglePassword("passwordConfirm"));
+
+// ? logout logic
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("user");
+  render();
+  checkStatus();
+});
+
+// ? checkStatus
+function checkStatus() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+  if (!user) {
+    logoutBtn.style.display = "none";
+    loginBtn.style.display = "block";
+    registerUserModalBtn.style.display = "block";
+    userNav.innerText = "";
+    addModalProductBtn.style.display = "none";
+  } else {
+    logoutBtn.style.display = "block";
+    loginBtn.style.display = "none";
+    registerUserModalBtn.style.display = "none";
+    userNav.innerText = user.user;
+  }
+
+  if (user && user.isAdmin) {
+    addModalProductBtn.style.display = "block";
+  } else {
+    addModalProductBtn.style.display = "none";
+  }
+}
+
+checkStatus();
+
+function inputsClear(...rest) {
+  for (let i = 0; i < rest.length; i++) {
+    rest[i].value = "";
+  }
+}
+
+// ! crud logic
+
+// ? create product
+
+addModalProductBtn.addEventListener("click", () => showModal("addProduct"));
+
+async function createProduct(e) {
+  e.preventDefault();
+  if (
+    !titleInp.value.trim() ||
+    !priceInp.value.trim() ||
+    !categoryInp.value.trim() ||
+    !descInp.value.trim() ||
+    !imageInp.value.trim()
+  ) {
+    showMessage("Some inputs are empty");
+    return;
+  }
+
+  const newProduct = {
+    title: titleInp.value,
+    price: priceInp.value,
+    category: categoryInp.value,
+    description: descInp.value,
+    image: imageInp.value,
+  };
+
+  await fetch(PRODUCTS_API, {
+    method: "POST",
+    body: JSON.stringify(newProduct),
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  });
+  render();
+  hideModal();
+  inputsClear(titleInp, priceInp, categoryInp, descInp, imageInp);
+}
+
+addProductForm.addEventListener("submit", createProduct);
+
+// ? read logic
+
+async function render() {
+  let requestAPI = `${PRODUCTS_API}`;
+  const res = await fetch(requestAPI);
+  const data = await res.json();
+  initStorage();
+  const user = JSON.parse(localStorage.getItem("user"));
+  productsList.innerHTML = "";
+  data.forEach(card => {
+    productsList.innerHTML += `
+    <div>
+    <img width=100 src=${card.image} />
+    <div><b>${card.title}</b></div>
+    <div><b>Description:</b>${card.description}</div>
+    <div><b>Category:</b>${card.category}</div>
+    <div><b>Price:</b>${card.price}$</div>
+    ${
+      user.isAdmin
+        ? `
+      <button id=${card.id}  class='deleteBtn' >Delete</button>
+      <button id=${card.id}  class='editBtn' >Edit</button>
+      `
+        : ""
+    }
+    </div>
+    `;
+  });
+}
+
+render();
+
+// ? delete logic
+
+document.addEventListener("click", async e => {
+  if (e.target.classList.contains("deleteBtn")) {
+    await fetch(`${PRODUCTS_API}/${e.target.id}`, {
+      method: "DELETE",
+    });
+    render();
+  }
+});

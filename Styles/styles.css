@@ -6,9 +6,9 @@
 
 /* Modal design */
 
-.modal.show {
-  display: block;
-  opacity: 1;
+.show {
+  display: block !important;
+  opacity: 1 !important;
 }
 
 .modal {
@@ -27,6 +27,7 @@
   opacity: 0;
   transition: opacity 0.5s ease;
   color: white;
+  z-index: 1;
 }
 
 .modal h3 {
@@ -60,6 +61,15 @@
 }
 .modal button:active {
   background-color: #003a6d;
+}
+
+.modal-bg {
+  position: fixed;
+  z-index: 0;
+  /* background-color: rgba(0, 0, 0, 0.634); */
+  backdrop-filter: blur(2px);
+  width: 100vw;
+  height: 100vh;
 }
 
 .modal button:last-child {
@@ -96,6 +106,14 @@
   opacity: 1;
 }
 
+#user-nav {
+  color: white;
+}
+
+.block {
+  display: block;
+}
+
 nav {
   padding: 10px;
   background-color: rgb(56, 55, 55);
@@ -120,6 +138,7 @@ h2 {
   font-size: 20px;
   width: 100px;
   color: gray;
+  cursor: pointer;
 }
 .search {
   height: 50px;
