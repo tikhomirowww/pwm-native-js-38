@@ -143,27 +143,50 @@ h2 {
   font-size: 30px;
   text-align: center;
 }
-/* navbar finish */
-/* modal */
-/* .modal {
-  margin: 0 auto;
-  width: 40%;
-  height: 30%;
-  border: 1px solid black;
-  background-color: rgb(167, 173, 167);
-  border-radius: 10px;
-}
-#registerUser-form {
-  display: flex;
-  flex-direction: column;
-  row-gap: 30px;
-}
-#registerUser-form button {
-  border-radius: 5px;
-  margin: 0 auto;
-  width: 50%;
-} */
 
 .login-modal {
   display: none;
+}
+#user-nav {
+  color: #ccc;
+  /*  products  */
+}
+#products {
+  margin: 0 auto;
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  font-size: 20px;
+}
+#products div {
+  padding: 5px;
+  margin-top: 10px;
+  margin-left: 10px;
+
+  border-radius: 5px;
+}
+#products > div {
+  border: 1px solid rgb(226, 220, 220);
+}
+#products > div > button {
+  font-size: 15px;
+  color: #ccc;
+  border: none;
+  width: 70px;
+  padding: 10px;
+  border-radius: 5px;
+}
+#products img {
+  object-fit: contain;
+}
+.deleteBtn {
+  margin: 10px;
+  background-color: #eb2f0e;
+}
+.editBtn {
+  background-color: #007bff;
+  margin: 10px;
+}
+.productsList {
 }
