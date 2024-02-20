@@ -110,6 +110,19 @@ function isDescendant(parent, child) {
   return false;
 }
 
+function clickOutsideModal(event) {
+  if (
+    !isDescendant(modal, event.target) &&
+    event.target !== registerUserModalBtn
+  ) {
+    modal.classList.remove("show");
+  }
+}
+// dshjkcn;
+
+document.addEventListener("click", clickOutsideModal);
+
+
 async function checkUniqueUserName(username) {
   let res = await fetch(USERS_API);
   let users = await res.json();
@@ -248,6 +261,25 @@ async function loginUser(e) {
 }
 
 loginForm.addEventListener("submit", loginUser);
+
+//! PASSWORD SHOW/HIDE
+function togglePassword(inputId) {
+  const inputElement = document.getElementById(inputId);
+  const passwordControl = document.querySelector(
+    `#${inputId} + .password-control`
+  );
+
+  if (inputElement.type === "password") {
+    inputElement.type = "text";
+    passwordControl.style.backgroundImage =
+      "url(https://snipp.ru/demo/495/no-view.svg)";
+  } else {
+    inputElement.type = "password";
+    passwordControl.style.backgroundImage =
+      "url(https://snipp.ru/demo/495/view.svg)";
+  }
+}
+
 
 // ? logout logic
 logoutBtn.addEventListener("click", () => {
