@@ -49,6 +49,38 @@
       "description": "sedan",
       "image": "https://kolesa-photos.kcdn.online/kolesa-read/c92481a037c0fbbdea9f5764fb32c649aaa307a5-1193x671.jpg",
       "id": 7
+    },
+    {
+      "title": "Dog",
+      "price": "234",
+      "category": "pets",
+      "description": "Очень милый пёсель!",
+      "image": "https://i.pinimg.com/564x/7f/26/e7/7f26e71b2c84e6b16d4f6d3fd8a58bca.jpg",
+      "id": 8
+    },
+    {
+      "title": "cat",
+      "price": "400",
+      "category": "pets",
+      "description": "cute cat",
+      "image": "https://t4.ftcdn.net/jpg/05/62/99/31/360_F_562993122_e7pGkeY8yMfXJcRmclsoIjtOoVDDgIlh.jpg",
+      "id": 9
+    },
+    {
+      "title": "qwesrdt",
+      "price": "300",
+      "category": "test",
+      "description": "wserdtfy",
+      "image": "https://www.bmwgroup.com/content/dam/grpw/websites/bmwgroup_com/brands/bmw_i/2023/230201_BMW_Group_BMW_i4eDrive40.png",
+      "id": 10
+    },
+    {
+      "title": "fg vb",
+      "price": "4567",
+      "category": "hello",
+      "description": "tcfvygbhunj",
+      "image": "https://s1.cdn.autoevolution.com/images/models/MAZDA_626--Mk-5--Sedan-1997_main.jpg",
+      "id": 11
     }
   ]
 }

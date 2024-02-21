@@ -214,3 +214,8 @@ h2 {
   height: 20px;
   background: url(https://snipp.ru/demo/495/view.svg) 0 0 no-repeat;
 }
+
+.pagination {
+  margin: auto;
+  width: fit-content;
+}

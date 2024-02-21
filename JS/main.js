@@ -47,10 +47,17 @@ const editProductForm = document.querySelector("#editProduct-form");
 // ? search connect
 const searchInp = document.querySelector(".search");
 
+//? filter connect
+const categorySelect = document.querySelector("#categorySelect");
+
+// ? pagination connect
+const prevBtn = document.querySelector(".prev");
+const nextBtn = document.querySelector(".next");
+const pageSpan = document.querySelector(".pagination span");
+
 // ?modal logic
 let modal = null;
-cancelBtn.forEach(item => {
-  console.log(item);
+cancelBtn.forEach((item) => {
   item.addEventListener("click", hideModal);
 });
 
@@ -136,7 +143,7 @@ document.addEventListener("click", clickOutsideModal);
 async function checkUniqueUserName(username) {
   let res = await fetch(USERS_API);
   let users = await res.json();
-  return users.some(item => item.username === username);
+  return users.some((item) => item.username === username);
 }
 
 async function registerUser(e) {
@@ -220,7 +227,7 @@ loginBtn.addEventListener("click", () => showModal("login"));
 async function checkUserPassword(username, password) {
   let res = await fetch(USERS_API);
   let users = await res.json();
-  const userObj = users.find(item => item.username === username);
+  const userObj = users.find((item) => item.username === username);
   return userObj.password === password ? true : false;
 }
 
@@ -258,7 +265,7 @@ async function loginUser(e) {
 
   let res = await fetch(USERS_API);
   let users = await res.json();
-  const userObj = users.find(item => item.username === logUserInp.value);
+  const userObj = users.find((item) => item.username === logUserInp.value);
   render();
 
   initStorage();
@@ -301,7 +308,6 @@ logoutBtn.addEventListener("click", () => {
 // ? checkStatus
 function checkStatus() {
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
   if (!user) {
     logoutBtn.style.display = "none";
     loginBtn.style.display = "block";
@@ -365,6 +371,7 @@ async function createProduct(e) {
     },
   });
   render();
+  addOptions();
   hideModal();
   inputsClear(titleInp, priceInp, categoryInp, descInp, imageInp);
 }
@@ -374,15 +381,20 @@ addProductForm.addEventListener("submit", createProduct);
 // ? read logic
 
 let search = "";
+let category = "";
+let currentPage = 1;
 
 async function render() {
-  let requestAPI = `${PRODUCTS_API}?title_like=${search}`;
+  let requestAPI = `${PRODUCTS_API}?title_like=${search}&category=${category}&_page=${currentPage}&_limit=3`;
+  if (!category) {
+    requestAPI = `${PRODUCTS_API}?title_like=${search}&_page=${currentPage}&_limit=3`;
+  }
   const res = await fetch(requestAPI);
   const data = await res.json();
   initStorage();
   const user = JSON.parse(localStorage.getItem("user"));
   productsList.innerHTML = "";
-  data.forEach(card => {
+  data.forEach((card) => {
     productsList.innerHTML += `
 <div class='productsList'>
     <img width="300px" height="300px"object-fit="contain" src=${card.image} />
@@ -408,7 +420,7 @@ render();
 
 // ? delete logic
 
-document.addEventListener("click", async e => {
+document.addEventListener("click", async (e) => {
   if (e.target.classList.contains("deleteBtn")) {
     await fetch(`${PRODUCTS_API}/${e.target.id}`, {
       method: "DELETE",
@@ -421,7 +433,7 @@ document.addEventListener("click", async e => {
 
 let id = null;
 
-document.addEventListener("click", async e => {
+document.addEventListener("click", async (e) => {
   if (e.target.classList.contains("editBtn")) {
     const productId = e.target.id;
     const res = await fetch(`${PRODUCTS_API}/${productId}`);
@@ -437,7 +449,7 @@ document.addEventListener("click", async e => {
   }
 });
 
-editProductForm.addEventListener("submit", async e => {
+editProductForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (
     !titleInpEdit.value.trim() ||
@@ -469,9 +481,71 @@ editProductForm.addEventListener("submit", async e => {
   hideModal();
 });
 
-// ! search logic
+// !?search logic
 
 searchInp.addEventListener("input", () => {
   search = searchInp.value;
+  currentPage = 1;
+  pageSpan.innerText = 1;
+  checkPage();
   render();
 });
+
+//? filter logic
+
+async function addOptions() {
+  const res = await fetch(PRODUCTS_API);
+  const data = await res.json();
+  const categories = data.map((item) => item.category);
+  let uniqueCategories = [...new Set(categories)];
+  categorySelect.innerHTML = "<option>All</option>";
+  uniqueCategories.forEach((item) => {
+    categorySelect.innerHTML += `
+    <option>${item}</option>
+    `;
+  });
+}
+addOptions();
+
+categorySelect.addEventListener("change", (e) => {
+  console.log(e.target.value);
+  if (e.target.value === "All") {
+    category = "";
+  } else {
+    currentPage = 1;
+    pageSpan.innerText = 1;
+    category = e.target.value;
+    checkPage();
+  }
+  render();
+});
+
+//? pagination logic
+nextBtn.addEventListener("click", () => {
+  currentPage++;
+  pageSpan.innerText = currentPage;
+  checkPage();
+  render();
+});
+
+prevBtn.addEventListener("click", () => {
+  currentPage--;
+  pageSpan.innerText = currentPage;
+  checkPage();
+  render();
+});
+
+async function checkPage() {
+  const res = await fetch(PRODUCTS_API);
+  const data = await res.json();
+  const maxPage = Math.ceil(data.length / 3);
+  if (currentPage === 1) {
+    prevBtn.style.display = "none";
+  } else if (currentPage === maxPage) {
+    nextBtn.style.display = "none";
+  } else {
+    prevBtn.style.display = "inline";
+    nextBtn.style.display = "inline";
+  }
+}
+checkPage();
